@@ -4,6 +4,8 @@ import { eq } from "drizzle-orm";
 import * as bcrypt from "bcrypt";
 import crypto from "crypto";
 
+export type ServiceResponse<T = any> = { data?: T; error?: string; message?: string; token?: string; user_id?: number };
+
 export const registerUser = async (name: string, email: string, password: string) => {
   // Cek apakah email sudah terdaftar
   const existingUsers = await db.select().from(users).where(eq(users.email, email));
