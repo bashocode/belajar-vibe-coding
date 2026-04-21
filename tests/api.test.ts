@@ -3,6 +3,11 @@ import { app } from "../src/index";
 import { db } from "../src/db/index";
 import { users, sessions } from "../src/db/schema";
 
+/**
+ * Kumpulan Unit Test komprehensif untuk seluruh endpoint API aplikasi.
+ * Menggunakan `bun:test` sebagai framework testing.
+ * Semua state database terkait users dan sessions akan dihapus secara otomatis sebelum tiap skenario dieksekusi.
+ */
 describe("API Unit Tests", () => {
   // Bersihkan data sebelum setiap test
   beforeEach(async () => {

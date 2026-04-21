@@ -1,6 +1,10 @@
 import { Elysia } from "elysia";
 import { usersRoutes } from "./routes/users-routes";
 
+/**
+ * Instance utama aplikasi Elysia.
+ * Mendaftarkan routing aplikasi, termasuk endpoint health-check dasar.
+ */
 export const app = new Elysia()
   .use(usersRoutes)
   .get("/", () => "Hello Elysia")

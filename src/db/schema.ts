@@ -1,5 +1,8 @@
 import { mysqlTable, int, varchar, timestamp } from "drizzle-orm/mysql-core";
 
+/**
+ * Definisi skema tabel `users` untuk menyimpan data pendaftaran pengguna.
+ */
 export const users = mysqlTable("users", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
@@ -8,6 +11,9 @@ export const users = mysqlTable("users", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+/**
+ * Definisi skema tabel `sessions` untuk menyimpan token login pengguna yang aktif.
+ */
 export const sessions = mysqlTable("sessions", {
   id: int("id").autoincrement().primaryKey(),
   token: varchar("token", { length: 255 }).notNull(),
