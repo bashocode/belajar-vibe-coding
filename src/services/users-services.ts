@@ -1,7 +1,8 @@
 import { db } from "../db/index";
-import { users } from "../db/schema";
+import { users, sessions } from "../db/schema";
 import { eq } from "drizzle-orm";
 import * as bcrypt from "bcrypt";
+import crypto from "crypto";
 
 export const registerUser = async (name: string, email: string, password: string) => {
   // Cek apakah email sudah terdaftar
@@ -22,4 +23,49 @@ export const registerUser = async (name: string, email: string, password: string
   });
   
   return { data: "OK" };
+};
+
+export const loginUser = async (email: string, password: string) => {
+  const user = await db.select().from(users).where(eq(users.email, email));
+  
+  if (user.length === 0) {
+    return { error: "email atau password salah" };
+  }
+  
+  const isPasswordMatch = await bcrypt.compare(password, user[0].password);
+  
+  if (!isPasswordMatch) {
+    return { error: "email atau password salah" };
+  }
+  
+  const token = crypto.randomUUID();
+  
+  await db.insert(sessions).values({
+    token,
+    userId: user[0].id,
+  });
+  
+  return { token };
+};
+
+export const logoutUser = async (token: string) => {
+  const session = await db.select().from(sessions).where(eq(sessions.token, token));
+  
+  if (session.length === 0) {
+    return { error: "token tidak ditemukan" };
+  }
+  
+  await db.delete(sessions).where(eq(sessions.token, token));
+  
+  return { data: "OK" };
+};
+
+export const validateToken = async (token: string) => {
+  const session = await db.select().from(sessions).where(eq(sessions.token, token));
+  
+  if (session.length === 0) {
+    return { error: "token tidak ditemukan" };
+  }
+  
+  return { data: "OK", user_id: session[0].userId };
 };
