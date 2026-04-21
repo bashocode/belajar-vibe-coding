@@ -1,7 +1,7 @@
 import { Elysia } from "elysia";
 import { usersRoutes } from "./routes/users-routes";
 
-const app = new Elysia()
+export const app = new Elysia()
   .use(usersRoutes)
   .get("/", () => "Hello Elysia")
   .get("/health", () => ({ status: "ok", timestamp: new Date().toISOString() }))
