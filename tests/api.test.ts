@@ -437,4 +437,34 @@ describe("API Unit Tests", () => {
       expect(body.error).toBe("unauthorized");
     });
   });
+
+  // ========================================
+  // 6. Swagger Documentation
+  // ========================================
+  describe("6. Swagger Documentation", () => {
+    it("[Success] Akses halaman Swagger UI", async () => {
+      const response = await app.handle(
+        new Request("http://localhost:3000/swagger", {
+          method: "GET",
+        })
+      );
+
+      expect(response.status).toBe(200);
+      const contentType = response.headers.get("content-type");
+      expect(contentType).toContain("text/html");
+    });
+
+    it("[Success] Akses data Swagger JSON", async () => {
+      const response = await app.handle(
+        new Request("http://localhost:3000/swagger/json", {
+          method: "GET",
+        })
+      );
+
+      expect(response.status).toBe(200);
+      const body = await response.json();
+      expect(body.openapi).toBeDefined();
+      expect(body.info.title).toBe("API Documentation Belajar Vibe Coding");
+    });
+  });
 });
