@@ -24,12 +24,19 @@ export const usersRoutes = new Elysia({ prefix: '/api/users' })
     }
     return result;
   })
-  .post('/logout', async ({ body, set }) => {
-    const { token } = body as any;
+  .delete('/logout', async ({ headers, set }) => {
+    const authHeader = headers['authorization'];
+    
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      set.status = 401;
+      return { error: "unauthorized" };
+    }
+    
+    const token = authHeader.substring(7);
     const result = await logoutUser(token);
     
     if (result.error) {
-      set.status = 404; // Not Found
+      set.status = 401;
       return result;
     }
     return result;

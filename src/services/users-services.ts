@@ -52,12 +52,12 @@ export const logoutUser = async (token: string) => {
   const session = await db.select().from(sessions).where(eq(sessions.token, token));
   
   if (session.length === 0) {
-    return { error: "token tidak ditemukan" };
+    return { error: "unauthorized" };
   }
   
   await db.delete(sessions).where(eq(sessions.token, token));
   
-  return { data: "OK" };
+  return { message: "logout berhasil" };
 };
 
 export const validateToken = async (token: string) => {
