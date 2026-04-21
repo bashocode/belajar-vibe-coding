@@ -69,3 +69,24 @@ export const validateToken = async (token: string) => {
   
   return { data: "OK", user_id: session[0].userId };
 };
+
+export const getCurrentUser = async (token: string) => {
+  const session = await db.select().from(sessions).where(eq(sessions.token, token));
+  
+  if (session.length === 0) {
+    return { error: "unauthorized" };
+  }
+  
+  const user = await db.select().from(users).where(eq(users.id, session[0].userId));
+  
+  if (user.length === 0) {
+    return { error: "unauthorized" };
+  }
+  
+  return {
+    id: user[0].id,
+    name: user[0].name,
+    email: user[0].email,
+    created_at: user[0].createdAt
+  };
+};
