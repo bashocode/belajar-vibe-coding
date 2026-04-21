@@ -9,6 +9,20 @@ export const usersRoutes = new Elysia({ prefix: '/api/users' })
   })
   .post('', async ({ body, set }) => {
     const { name, email, password } = body as any;
+    
+    if (!name || name.length > 255) {
+      set.status = 400;
+      return { error: "nama tidak valid atau terlalu panjang" };
+    }
+    if (!email || email.length > 255) {
+      set.status = 400;
+      return { error: "email tidak valid atau terlalu panjang" };
+    }
+    if (!password || password.length > 255) {
+      set.status = 400;
+      return { error: "password tidak valid atau terlalu panjang" };
+    }
+
     const result = await registerUser(name, email, password);
     if (result.error) {
         set.status = 400;
