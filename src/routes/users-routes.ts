@@ -4,7 +4,8 @@ import { extractToken } from "../utils/auth-helper";
 
 export const usersRoutes = new Elysia({ prefix: '/api/users' })
   .onError(({ code, error, set }) => {
-    return { error: error.message || "Internal Server Error" };
+    const message = error instanceof Error ? error.message : "Internal Server Error";
+    return { error: message };
   })
   .post('', async ({ body, set }) => {
     const { name, email, password } = body as any;
